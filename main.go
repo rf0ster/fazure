@@ -1,9 +1,9 @@
 package main
 
 import (
+	"fazure/views"
 	"fmt"
 	"os"
-	"fazure/views"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -15,4 +15,3 @@ func main() {
 		os.Exit(1)
 	}
 }
-

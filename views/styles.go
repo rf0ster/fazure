@@ -88,6 +88,7 @@ var (
 				Foreground(lipgloss.Color(ColorDateGray))
 )
 
+
 // GetWorkItemTypeColor returns the ANSI color for a work item type
 func GetWorkItemTypeColor(itemType azure.WorkItemType) string {
 	switch itemType {
@@ -112,5 +113,8 @@ func GetWorkItemTypeStyle(itemType azure.WorkItemType) lipgloss.Style {
 	if color == "" {
 		return lipgloss.NewStyle()
 	}
-	return lipgloss.NewStyle().Foreground(lipgloss.Color(color))
+
+	return lipgloss.NewStyle().
+		Bold(true).
+		Foreground(lipgloss.Color(color))
 }

@@ -1,6 +1,7 @@
 package azure
 
 type WorkItemType string
+
 const (
 	Initiative  WorkItemType = "Initiative"
 	Requirement WorkItemType = "Requirement"
@@ -31,4 +32,3 @@ type WorkItem struct {
 	Iteration   string
 	Comments    []Comment
 }
-

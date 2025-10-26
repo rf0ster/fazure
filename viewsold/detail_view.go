@@ -91,8 +91,7 @@ func RenderDetailView(item *azure.WorkItem, selectedFieldIndex int, isDirty bool
 
 	var s strings.Builder
 
-	// Header with ID and Type
-	header := fmt.Sprintf("%s #%d", item.Type, item.ID)
+	// Header with ID and Type header := fmt.Sprintf("%s #%d", item.Type, item.ID)
 	if isDirty {
 		// Add dirty indicator
 		dirtyStyle := lipgloss.NewStyle().

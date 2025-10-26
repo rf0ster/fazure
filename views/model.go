@@ -1,14 +1,23 @@
 package views
 
-import tea "github.com/charmbracelet/bubbletea"
+import (
+	"fazure/azure"
+
+	tea "github.com/charmbracelet/bubbletea"
+)
 
 type Model struct {
-	view View
+	view     View
+	user     string
+	azure    azure.MockAzureClient
+	workItem azure.WorkItem
 }
 
 func NewModel() Model {
 	return Model{
-		view: &LoginView{},
+		user:  "",
+		view:  &LoginView{},
+		azure: azure.MockAzureClient{},
 	}
 }
 
@@ -33,4 +42,3 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m Model) View() string {
 	return m.view.View(m)
 }
-

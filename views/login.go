@@ -37,14 +37,13 @@ func (v *LoginView) Update(m Model, msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "esc":
 			return m, tea.Quit
 		case "enter":
+			m.user = v.userInput.Value()
 			m.view = &BacklogView{}
 			return m, m.view.Init(m)
 		}
 	}
 
-
 	var cmd tea.Cmd
 	v.userInput, cmd = v.userInput.Update(msg)
 	return m, cmd
 }
-

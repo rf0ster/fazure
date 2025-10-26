@@ -1,21 +1,32 @@
 package views
 
 import (
+	"fazure/azure"
+	"fmt"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-type DetailsView struct{}
+type DetailsView struct {
+	item *azure.WorkItem
+}
 
 func (v *DetailsView) Init(m Model) tea.Cmd {
 	return nil
 }
 
 func (v *DetailsView) View(m Model) string {
-	var sb strings.Builder
-	sb.WriteString("Viewing Backlog Item\n")
-	return sb.String()
+	if v.item == nil {
+		return "No item selected"
+	}
+
+	var s strings.Builder
+	header := fmt.Sprintf("%s #%d", v.item.Type, v.item.ID)
+	s.WriteString(GetWorkItemTypeStyle(v.item.Type).Render(header))
+	s.WriteString("\n\n")
+
+	return s.String()
 }
 
 func (v *DetailsView) Update(m Model, msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -30,4 +41,3 @@ func (v *DetailsView) Update(m Model, msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	return m, nil
 }
-
