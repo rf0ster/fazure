@@ -2,20 +2,33 @@ package views
 
 import (
 	"fazure/azure"
+	"fazure/forms"
 	"fmt"
-	"strconv"
 	"strings"
 
-	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
 type DetailsView struct {
-	item             *azure.WorkItem
-	commentsViewport viewport.Model
+	item *azure.WorkItem
+	form *forms.Form
 }
 
 func (v *DetailsView) Init(m Model) tea.Cmd {
+	v.form = forms.NewForm(
+		forms.NewRadioField("State", []string{"New", "Active", "Resolved", "Closed"}, true),
+		forms.NewRadioField("Assigned To", []string{"Unassigned", "John Doe", "Jane Smith", "Alice Johnson", "Bob Brown"}, true),
+		forms.NewRadioField("Priority", []string{"1", "2", "3", "4", "5"}, true),
+		forms.NewTabs("",
+			[]string{"Description", "Acceptance Criteria", "Discussion"},
+			[]forms.FormField{
+				forms.NewTextAreaField("", v.item.Description, true),
+				forms.NewTextAreaField("", v.item.AcceptanceCriteria, true),
+				forms.NewTextAreaField("", "Discussion notes", true),
+			},
+		),
+	)
+
 	return nil
 }
 
@@ -38,98 +51,11 @@ func (v *DetailsView) View(m Model) string {
 	s.WriteString(GetWorkItemTypeStyle(item.Type).Render(wrappedTitle))
 	s.WriteString("\n\n")
 
-	// Display work item fields
-	s.WriteString(FieldLabelStyle.Render("State:") + " " + FieldValueStyle.Render(item.State) + "\n")
-	s.WriteString(FieldLabelStyle.Render("Assigned To:") + " " + FieldValueStyle.Render(item.AssignedTo) + "\n")
-	s.WriteString(FieldLabelStyle.Render("Priority:") + " " + FieldValueStyle.Render(strconv.Itoa(item.Priority)) + "\n")
-	s.WriteString(FieldLabelStyle.Render("Created By:") + " " + FieldValueStyle.Render(item.CreatedBy) + "\n")
-	s.WriteString(FieldLabelStyle.Render("Created Date:") + " " + FieldValueStyle.Render(item.CreatedDate) + "\n")
-	s.WriteString(FieldLabelStyle.Render("Area Path:") + " " + FieldValueStyle.Render(item.AreaPath) + "\n")
-	s.WriteString(FieldLabelStyle.Render("Iteration:") + " " + FieldValueStyle.Render(item.Iteration) + "\n")
-
-	// Display tags
-	if len(item.Tags) > 0 {
-		var tags []string
-		for _, tag := range item.Tags {
-			tags = append(tags, TagStyle.Render(tag))
-		}
-		s.WriteString(FieldLabelStyle.Render("Tags:") + " " + strings.Join(tags, " ") + "\n")
-	}
-	s.WriteString("\n")
-
-	// Display description
-	s.WriteString(FieldLabelStyle.Render("Description:") + "\n")
-	wrappedDescription := wrapText(item.Description, width-2) // -2 for padding
-	s.WriteString(DescriptionStyle.Render(wrappedDescription))
-	s.WriteString("\n\n")
-
-
-	// Display comments section
-	discussionHeader := DiscussionHeaderStyle.Render(fmt.Sprintf("Discussion (%d)", len(item.Comments)))
-	s.WriteString(discussionHeader + "\n")
-
-	// Initialize viewport if not already initialized
-	if v.commentsViewport.Width == 0 {
-		v.commentsViewport = viewport.New(width, 20)
-	}
-
-	// Update viewport content and dimensions
-	v.commentsViewport.Width = width
-	v.commentsViewport.SetContent(RenderComments(item, width))
-
-	s.WriteString(v.commentsViewport.View())
-	s.WriteString("\n\n")
-
+	s.WriteString(v.form.View())
 	return s.String()
 }
 
 func (v *DetailsView) Update(m Model, msg tea.Msg) (tea.Model, tea.Cmd) {
-	var cmd tea.Cmd
-
-	switch msg := msg.(type) {
-	case tea.KeyMsg:
-		switch msg.String() {
-		case "esc":
-			m.view = &BacklogView{}
-			return m, m.view.Init(m)
-		case "shift+up", "K":
-			v.commentsViewport.ScrollUp(1)
-		case "shift+down", "J":
-			v.commentsViewport.ScrollDown(1)
-		}
-	}
-
+	_, cmd := v.form.Update(m, msg)
 	return m, cmd
 }
-
-// CreateCommentsViewport creates a viewport for scrollable comments
-func CreateCommentsViewport(item *azure.WorkItem, width int) viewport.Model {
-	vp := viewport.New(width, 20)
-	vp.SetContent(RenderComments(item, width))
-	return vp
-}
-
-// RenderComments renders the comments section as a string
-func RenderComments(item *azure.WorkItem, width int) string {
-	if item == nil || len(item.Comments) == 0 {
-		return "No comments yet."
-	}
-
-	var content strings.Builder
-
-	for _, comment := range item.Comments {
-		// Wrap comment content to width
-		wrappedContent := wrapText(comment.Content, width-4) // -4 for padding
-
-		commentBox := fmt.Sprintf("%s  %s\n\n%s",
-			CommentAuthorStyle.Render(comment.Author),
-			CommentDateStyle.Render(comment.Date),
-			wrappedContent,
-		)
-		content.WriteString(CommentStyle.Render(commentBox))
-		content.WriteString("\n")
-	}
-
-	return content.String()
-}
-

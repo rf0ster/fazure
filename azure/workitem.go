@@ -18,17 +18,18 @@ type Comment struct {
 
 // WorkItem represents a work item from Azure DevOps
 type WorkItem struct {
-	ID          int
-	Type        WorkItemType
-	Title       string
-	AssignedTo  string
-	State       string
-	Priority    int
-	Description string
-	CreatedBy   string
-	CreatedDate string
-	Tags        []string
-	AreaPath    string
-	Iteration   string
-	Comments    []Comment
+	ID                 int
+	Type               WorkItemType
+	Title              string
+	AssignedTo         string
+	State              string
+	Priority           int
+	Description        string
+	AcceptanceCriteria string
+	CreatedBy          string
+	CreatedDate        string
+	Tags               []string
+	AreaPath           string
+	Iteration          string
+	Comments           []Comment
 }

@@ -7,18 +7,17 @@ import (
 )
 
 type Model struct {
-	view     View
-	user     string
-	azure    azure.MockAzureClient
-	workItem azure.WorkItem
+	view           View
+	user           string
+	azure          azure.MockAzureClient
 	terminalWidth  int
 	terminalHeight int
 }
 
 func NewModel() Model {
 	return Model{
-		user:  "",
-		view:  &LoginView{},
+		user:  "john",
+		view:  &BacklogView{},
 		azure: azure.MockAzureClient{},
 	}
 }

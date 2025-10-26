@@ -63,6 +63,11 @@ var (
 			Background(lipgloss.Color(ColorDarkGray)).
 			Padding(0, 1)
 
+	TextAreaHeader = lipgloss.NewStyle().
+			Bold(true).
+			Foreground(lipgloss.Color(ColorCyanGreen)).
+			MarginBottom(1)
+
 	DescriptionStyle = lipgloss.NewStyle().
 				BorderStyle(lipgloss.RoundedBorder()).
 				BorderForeground(lipgloss.Color(ColorBorderGray)).
@@ -86,8 +91,24 @@ var (
 
 	CommentDateStyle = lipgloss.NewStyle().
 				Foreground(lipgloss.Color(ColorDateGray))
-)
 
+	ActiveOptionStyle = lipgloss.NewStyle().
+				Bold(true).
+				Foreground(lipgloss.Color(ColorCyanGreen))
+
+	InactiveOptionStyle = lipgloss.NewStyle().
+				Foreground(lipgloss.Color(ColorGray))
+
+	ActiveTabStyle = lipgloss.NewStyle().
+			Bold(true).
+			Foreground(lipgloss.Color(ColorWhite)).
+			Background(lipgloss.Color(ColorPurpleBg)).
+			Padding(0, 1)
+
+	InactiveTabStyle = lipgloss.NewStyle().
+				Foreground(lipgloss.Color(ColorGray)).
+				Padding(0, 1)
+)
 
 // GetWorkItemTypeColor returns the ANSI color for a work item type
 func GetWorkItemTypeColor(itemType azure.WorkItemType) string {
