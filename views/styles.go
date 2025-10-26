@@ -1,4 +1,4 @@
-package main
+package views
 
 import (
 	"fazure/azure"
@@ -15,64 +15,77 @@ const (
 	BugColor         = "161" // Red
 )
 
+// UI color constants
+const (
+	ColorPurpleViolet = "#7D56F4" // Primary purple/violet
+	ColorGray         = "#626262" // Gray for help text
+	ColorWhite        = "15"      // White
+	ColorPurpleBg     = "57"      // Purple background
+	ColorCyanGreen    = "86"      // Cyan/green for labels
+	ColorLightYellow  = "229"     // Light yellow
+	ColorDarkGray     = "237"     // Dark gray background
+	ColorBorderGray   = "240"     // Border gray
+	ColorDateGray     = "241"     // Date text gray
+)
+
 // Common styles used throughout the application
 var (
 	TitleStyle = lipgloss.NewStyle().
 			Bold(true).
-			Foreground(lipgloss.Color("#7D56F4")).
+			Foreground(lipgloss.Color(ColorPurpleViolet)).
 			MarginTop(1).
 			MarginBottom(1)
 
 	HelpStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#626262")).
+			Foreground(lipgloss.Color(ColorGray)).
 			MarginTop(1)
 
 	HeaderStyle = lipgloss.NewStyle().
 			Bold(true).
-			Foreground(lipgloss.Color("15")).
-			Background(lipgloss.Color("57")).
+			Foreground(lipgloss.Color(ColorWhite)).
+			Background(lipgloss.Color(ColorPurpleBg)).
 			Padding(0, 2)
 
 	TitleDetailStyle = lipgloss.NewStyle().
 				Bold(true).
-				Foreground(lipgloss.Color("15"))
+				Foreground(lipgloss.Color(ColorWhite))
 
 	FieldLabelStyle = lipgloss.NewStyle().
 			Bold(true).
-			Foreground(lipgloss.Color("86")).
+			Foreground(lipgloss.Color(ColorCyanGreen)).
 			Width(15)
 
 	FieldValueStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("15"))
+			Foreground(lipgloss.Color(ColorWhite))
 
 	TagStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("229")).
-			Background(lipgloss.Color("237")).
+			Foreground(lipgloss.Color(ColorLightYellow)).
+			Background(lipgloss.Color(ColorDarkGray)).
 			Padding(0, 1)
 
 	DescriptionStyle = lipgloss.NewStyle().
 				BorderStyle(lipgloss.RoundedBorder()).
-				BorderForeground(lipgloss.Color("240")).
+				BorderForeground(lipgloss.Color(ColorBorderGray)).
 				Padding(1).
 				MarginBottom(1)
 
 	DiscussionHeaderStyle = lipgloss.NewStyle().
 				Bold(true).
-				Foreground(lipgloss.Color("86")).
+				Foreground(lipgloss.Color(ColorCyanGreen)).
 				MarginBottom(1)
 
 	CommentStyle = lipgloss.NewStyle().
 			BorderStyle(lipgloss.RoundedBorder()).
-			BorderForeground(lipgloss.Color("240")).
+			BorderForeground(lipgloss.Color(ColorBorderGray)).
 			Padding(1).
 			MarginBottom(1)
 
 	CommentAuthorStyle = lipgloss.NewStyle().
 				Bold(true).
-				Foreground(lipgloss.Color("86"))
+				Foreground(lipgloss.Color(ColorCyanGreen))
 
 	CommentDateStyle = lipgloss.NewStyle().
-				Foreground(lipgloss.Color("241"))
+				Foreground(lipgloss.Color(ColorDateGray))
 )
 
 // GetWorkItemTypeColor returns the ANSI color for a work item type

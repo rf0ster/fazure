@@ -1,8 +1,6 @@
 package views
 
 import (
-	"strings"
-
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -22,10 +20,14 @@ func (v *LoginView) Init(m Model) tea.Cmd {
 }
 
 func (v *LoginView) View(m Model) string {
-	var sb strings.Builder
-	sb.WriteString("Login View\n")
-	sb.WriteString(v.userInput.View())
-	return sb.String()
+	var s string
+	s += TitleStyle.Render("Azure DevOps Work Item Search")
+	s += "\n\n"
+	s += v.userInput.View()
+	s += "\n\n"
+	s += HelpStyle.Render("Press 'enter' to search • 'q' to quit\n")
+	s += HelpStyle.Render("Test users: john, sarah, mike, emma")
+	return s
 }
 
 func (v *LoginView) Update(m Model, msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -39,6 +41,7 @@ func (v *LoginView) Update(m Model, msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, m.view.Init(m)
 		}
 	}
+
 
 	var cmd tea.Cmd
 	v.userInput, cmd = v.userInput.Update(msg)
