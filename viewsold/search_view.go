@@ -1,4 +1,4 @@
-package views
+package viewsold
 
 import (
 	"fazure/types"

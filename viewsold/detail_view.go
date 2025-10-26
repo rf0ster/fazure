@@ -1,5 +1,5 @@
-// Package views contains modules for rendering different parts of the application.
-package views
+// Package viewsold contains modules for rendering different parts of the application.
+package viewsold
 
 import (
 	"fazure/types"

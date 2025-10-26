@@ -1,4 +1,4 @@
-package model
+package azure
 
 type WorkItemType string
 const (

@@ -1,6 +1,10 @@
-package types
+package main
 
-import "github.com/charmbracelet/lipgloss"
+import (
+	"fazure/azure"
+
+	"github.com/charmbracelet/lipgloss"
+)
 
 // Azure DevOps work item type colors (8-bit ANSI color codes)
 const (
@@ -72,17 +76,17 @@ var (
 )
 
 // GetWorkItemTypeColor returns the ANSI color for a work item type
-func GetWorkItemTypeColor(itemType WorkItemType) string {
+func GetWorkItemTypeColor(itemType azure.WorkItemType) string {
 	switch itemType {
-	case Initiative:
+	case azure.Initiative:
 		return InitiativeColor
-	case Requirement:
+	case azure.Requirement:
 		return RequirementColor
-	case UserStory:
+	case azure.UserStory:
 		return UserStoryColor
-	case Task:
+	case azure.Task:
 		return TaskColor
-	case Bug:
+	case azure.Bug:
 		return BugColor
 	default:
 		return ""
@@ -90,7 +94,7 @@ func GetWorkItemTypeColor(itemType WorkItemType) string {
 }
 
 // GetWorkItemTypeStyle returns the lipgloss style for a work item type
-func GetWorkItemTypeStyle(itemType WorkItemType) lipgloss.Style {
+func GetWorkItemTypeStyle(itemType azure.WorkItemType) lipgloss.Style {
 	color := GetWorkItemTypeColor(itemType)
 	if color == "" {
 		return lipgloss.NewStyle()
