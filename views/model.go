@@ -13,7 +13,7 @@ func NewModel() Model {
 }
 
 func (m Model) Init() tea.Cmd {
-	return m.view.Init(&m)
+	return m.view.Init(m)
 }
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -23,14 +23,14 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "ctrl+c", "q":
 			return m, tea.Quit
 		default:
-			return m.view.Update(&m, msg)
+			return m.view.Update(m, msg)
 		}
 	default:
-		return m.view.Update(&m, msg)
+		return m.view.Update(m, msg)
 	}
 }
 
 func (m Model) View() string {
-	return m.view.View(&m)
+	return m.view.View(m)
 }
 

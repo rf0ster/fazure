@@ -8,17 +8,17 @@ import (
 
 type BacklogView struct{}
 
-func (v *BacklogView) Init(m *Model) tea.Cmd {
+func (v *BacklogView) Init(m Model) tea.Cmd {
 	return nil
 }
 
-func (v *BacklogView) View(m *Model) string {
+func (v *BacklogView) View(m Model) string {
 	var sb strings.Builder
 	sb.WriteString("Viewing Backlog\n")
 	return sb.String()
 }
 
-func (v *BacklogView) Update(m *Model, msg tea.Msg) (tea.Model, tea.Cmd) {
+func (v *BacklogView) Update(m Model, msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {

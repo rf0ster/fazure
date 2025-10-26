@@ -11,7 +11,7 @@ type LoginView struct {
 	userInput textinput.Model
 }
 
-func (v *LoginView) Init(m *Model) tea.Cmd {
+func (v *LoginView) Init(m Model) tea.Cmd {
 	v.userInput = textinput.New()
 	v.userInput.Placeholder = "Username"
 	v.userInput.CharLimit = 32
@@ -21,14 +21,14 @@ func (v *LoginView) Init(m *Model) tea.Cmd {
 	return nil
 }
 
-func (v *LoginView) View(m *Model) string {
+func (v *LoginView) View(m Model) string {
 	var sb strings.Builder
 	sb.WriteString("Login View\n")
 	sb.WriteString(v.userInput.View())
 	return sb.String()
 }
 
-func (v *LoginView) Update(m *Model, msg tea.Msg) (tea.Model, tea.Cmd) {
+func (v *LoginView) Update(m Model, msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
