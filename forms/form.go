@@ -1,4 +1,4 @@
-// Package forms is a package for creating interactive forms 
+// Package forms is a package for creating interactive forms
 // in terminal applications using the Bubble Tea framework.
 package forms
 
@@ -40,7 +40,7 @@ func NewForm(fields ...FormField) *Form {
 	pad += 2 // extra padding
 
 	return &Form{
-		fields: fields,
+		fields:   fields,
 		labelPad: pad,
 	}
 }

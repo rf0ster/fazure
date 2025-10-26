@@ -2,8 +2,8 @@ package forms
 
 import (
 	"github.com/charmbracelet/bubbles/textarea"
-	"github.com/charmbracelet/lipgloss"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
 var textareadLabelStyle = lipgloss.NewStyle().
@@ -16,10 +16,10 @@ var textareadHelpStyle = lipgloss.NewStyle().
 
 // TextAreaField implements FormField for a text area input.
 type TextAreaField struct {
-	label    string
-	focused  bool
-	editing  bool
-	textarea textarea.Model
+	label      string
+	focused    bool
+	editing    bool
+	textarea   textarea.Model
 	alwaysShow bool
 }
 
@@ -31,8 +31,8 @@ func NewTextAreaField(label string, content string, alwaysShow bool) *TextAreaFi
 	ta.ShowLineNumbers = false
 
 	return &TextAreaField{
-		label:    label,
-		textarea: ta,
+		label:      label,
+		textarea:   ta,
 		alwaysShow: alwaysShow,
 	}
 }
@@ -98,4 +98,3 @@ func (t *TextAreaField) Save() {
 func (t *TextAreaField) Terminator() string {
 	return "ctrl+s"
 }
-

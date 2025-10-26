@@ -4,6 +4,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 )
+
 var focusedTabStyle = lipgloss.NewStyle().
 	Foreground(lipgloss.Color("15")).
 	Bold(true).
@@ -20,7 +21,7 @@ type Tabs struct {
 	labels       []string
 	fields       []FormField
 	focusedIndex int
-	isFocused	 bool
+	isFocused    bool
 	isEditing    bool
 }
 

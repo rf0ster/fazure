@@ -14,7 +14,7 @@ type RadioField struct {
 	label         string
 	labelPad      int
 	focused       bool
-	editing	      bool
+	editing       bool
 	options       []string
 	selectedIndex int
 	horizontal    bool
@@ -22,8 +22,8 @@ type RadioField struct {
 
 func NewRadioField(label string, options []string, horizontal bool) *RadioField {
 	return &RadioField{
-		label:   label,
-		options: options,
+		label:      label,
+		options:    options,
 		horizontal: horizontal,
 	}
 }
@@ -137,4 +137,3 @@ func (r *RadioField) Save() {
 func (r *RadioField) Terminator() string {
 	return "enter"
 }
-
