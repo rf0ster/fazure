@@ -10,8 +10,8 @@ func NewMockAzureClient() *MockAzureClient {
 }
 
 // SearchWorkItems returns mock backlog items for a given user
-func (c *MockAzureClient) SearchWorkItems(assignedTo string) []BacklogItem {
-	mockData := map[string][]BacklogItem{
+func (c *MockAzureClient) SearchWorkItems(assignedTo string) []WorkItem {
+	mockData := map[string][]WorkItem{
 		"john": {
 			{
 				ID: 1001, Type: Initiative, Title: "Implement new authentication system",
@@ -122,5 +122,5 @@ func (c *MockAzureClient) SearchWorkItems(assignedTo string) []BacklogItem {
 	if items, exists := mockData[assignedTo]; exists {
 		return items
 	}
-	return []BacklogItem{}
+	return []WorkItem{}
 }

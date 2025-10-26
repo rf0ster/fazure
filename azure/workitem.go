@@ -15,8 +15,8 @@ type Comment struct {
 	Content string
 }
 
-// BacklogItem represents a work item from Azure DevOps
-type BacklogItem struct {
+// WorkItem represents a work item from Azure DevOps
+type WorkItem struct {
 	ID          int
 	Type        WorkItemType
 	Title       string

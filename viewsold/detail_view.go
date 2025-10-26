@@ -2,7 +2,8 @@
 package viewsold
 
 import (
-	"fazure/types"
+	"fazure/azure"
+
 	"fmt"
 	"strconv"
 	"strings"
@@ -12,14 +13,14 @@ import (
 )
 
 // CreateCommentsViewport creates a viewport for scrollable comments
-func CreateCommentsViewport(item *types.BacklogItem, width int) viewport.Model {
+func CreateCommentsViewport(item *azure.WorkItem, width int) viewport.Model {
 	vp := viewport.New(width, 20)
 	vp.SetContent(RenderComments(item, width))
 	return vp
 }
 
 // RenderComments renders the comments section as a string
-func RenderComments(item *types.BacklogItem, width int) string {
+func RenderComments(item *azure.WorkItem, width int) string {
 	if item == nil || len(item.Comments) == 0 {
 		return "No comments yet."
 	}
@@ -31,11 +32,11 @@ func RenderComments(item *types.BacklogItem, width int) string {
 		wrappedContent := wrapText(comment.Content, width-4) // -4 for padding
 
 		commentBox := fmt.Sprintf("%s  %s\n\n%s",
-			types.CommentAuthorStyle.Render(comment.Author),
-			types.CommentDateStyle.Render(comment.Date),
+			azure.CommentAuthorStyle.Render(comment.Author),
+			azure.CommentDateStyle.Render(comment.Date),
 			wrappedContent,
 		)
-		content.WriteString(types.CommentStyle.Render(commentBox))
+		content.WriteString(azure.CommentStyle.Render(commentBox))
 		content.WriteString("\n")
 	}
 
@@ -83,7 +84,7 @@ const (
 )
 
 // RenderDetailView renders the full detail view for a work item
-func RenderDetailView(item *types.BacklogItem, selectedFieldIndex int, isDirty bool, width int, viewportView string) string {
+func RenderDetailView(item *azure.WorkItem, selectedFieldIndex int, isDirty bool, width int, viewportView string) string {
 	if item == nil {
 		return "No item selected"
 	}
@@ -100,36 +101,36 @@ func RenderDetailView(item *types.BacklogItem, selectedFieldIndex int, isDirty b
 			Render(" ●")
 		header += dirtyStyle
 	}
-	s.WriteString(types.HeaderStyle.Render(header))
+	s.WriteString(azure.HeaderStyle.Render(header))
 	s.WriteString("\n\n")
 
 	// Title - wrap to width
 	wrappedTitle := wrapText(item.Title, width-2)
-	s.WriteString(types.TitleDetailStyle.Render(wrappedTitle))
+	s.WriteString(azure.TitleDetailStyle.Render(wrappedTitle))
 	s.WriteString("\n\n")
 
 	// Fields section
-	s.WriteString(types.FieldLabelStyle.Render("State:") + " " + types.FieldValueStyle.Render(item.State) + "\n")
-	s.WriteString(types.FieldLabelStyle.Render("Assigned To:") + " " + types.FieldValueStyle.Render(item.AssignedTo) + "\n")
-	s.WriteString(types.FieldLabelStyle.Render("Priority:") + " " + types.FieldValueStyle.Render(strconv.Itoa(item.Priority)) + "\n")
-	s.WriteString(types.FieldLabelStyle.Render("Created By:") + " " + types.FieldValueStyle.Render(item.CreatedBy) + "\n")
-	s.WriteString(types.FieldLabelStyle.Render("Created Date:") + " " + types.FieldValueStyle.Render(item.CreatedDate) + "\n")
-	s.WriteString(types.FieldLabelStyle.Render("Area Path:") + " " + types.FieldValueStyle.Render(item.AreaPath) + "\n")
-	s.WriteString(types.FieldLabelStyle.Render("Iteration:") + " " + types.FieldValueStyle.Render(item.Iteration) + "\n")
+	s.WriteString(azure.FieldLabelStyle.Render("State:") + " " + azure.FieldValueStyle.Render(item.State) + "\n")
+	s.WriteString(azure.FieldLabelStyle.Render("Assigned To:") + " " + azure.FieldValueStyle.Render(item.AssignedTo) + "\n")
+	s.WriteString(azure.FieldLabelStyle.Render("Priority:") + " " + azure.FieldValueStyle.Render(strconv.Itoa(item.Priority)) + "\n")
+	s.WriteString(azure.FieldLabelStyle.Render("Created By:") + " " + azure.FieldValueStyle.Render(item.CreatedBy) + "\n")
+	s.WriteString(azure.FieldLabelStyle.Render("Created Date:") + " " + azure.FieldValueStyle.Render(item.CreatedDate) + "\n")
+	s.WriteString(azure.FieldLabelStyle.Render("Area Path:") + " " + azure.FieldValueStyle.Render(item.AreaPath) + "\n")
+	s.WriteString(azure.FieldLabelStyle.Render("Iteration:") + " " + azure.FieldValueStyle.Render(item.Iteration) + "\n")
 
 	// Tags
 	if len(item.Tags) > 0 {
 		var tags []string
 		for _, tag := range item.Tags {
-			tags = append(tags, types.TagStyle.Render(tag))
+			tags = append(tags, azure.TagStyle.Render(tag))
 		}
-		s.WriteString(types.FieldLabelStyle.Render("Tags:") + " " + strings.Join(tags, " ") + "\n")
+		s.WriteString(azure.FieldLabelStyle.Render("Tags:") + " " + strings.Join(tags, " ") + "\n")
 	}
 
 	s.WriteString("\n")
 
 	// Description section - show as editable field
-	descriptionLabel := types.FieldLabelStyle.Render("Description:")
+	descriptionLabel := azure.FieldLabelStyle.Render("Description:")
 	if selectedFieldIndex == FieldDescription {
 		// Highlight selected field
 		selectedStyle := lipgloss.NewStyle().
@@ -143,11 +144,11 @@ func RenderDetailView(item *types.BacklogItem, selectedFieldIndex int, isDirty b
 	s.WriteString(descriptionLabel + "\n")
 	// Wrap description text to width
 	wrappedDescription := wrapText(item.Description, width-2) // -2 for padding
-	s.WriteString(types.DescriptionStyle.Render(wrappedDescription))
+	s.WriteString(azure.DescriptionStyle.Render(wrappedDescription))
 	s.WriteString("\n\n")
 
 	// Discussion section
-	discussionHeader := types.DiscussionHeaderStyle.Render(fmt.Sprintf("Discussion (%d)", len(item.Comments)))
+	discussionHeader := azure.DiscussionHeaderStyle.Render(fmt.Sprintf("Discussion (%d)", len(item.Comments)))
 
 	// Add new comment field - show inline when not selected
 	if selectedFieldIndex == FieldAddComment {
@@ -163,7 +164,7 @@ func RenderDetailView(item *types.BacklogItem, selectedFieldIndex int, isDirty b
 	} else {
 		// Show header on separate line
 		s.WriteString(discussionHeader + "\n\n")
-		addCommentLabel := types.DiscussionHeaderStyle.Render("➤ Add new comment:")
+		addCommentLabel := azure.DiscussionHeaderStyle.Render("➤ Add new comment:")
 		s.WriteString(addCommentLabel + "\n\n")
 	}
 
@@ -177,13 +178,13 @@ func RenderDetailView(item *types.BacklogItem, selectedFieldIndex int, isDirty b
 		helpText += " • Ctrl+S: save • Ctrl+R: revert"
 	}
 	helpText += " • Esc: back • q: quit"
-	s.WriteString(types.HelpStyle.Render(helpText))
+	s.WriteString(azure.HelpStyle.Render(helpText))
 
 	return s.String()
 }
 
 // RenderEditView renders the edit mode view for modifying fields
-func RenderEditView(item *types.BacklogItem, selectedFieldIndex int, width int, textareaView string) string {
+func RenderEditView(item *azure.WorkItem, selectedFieldIndex int, width int, textareaView string) string {
 	if item == nil {
 		return "No item selected"
 	}
@@ -191,12 +192,12 @@ func RenderEditView(item *types.BacklogItem, selectedFieldIndex int, width int, 
 	var s strings.Builder
 
 	// Header with ID and Type
-	s.WriteString(types.HeaderStyle.Render(fmt.Sprintf("EDITING: %s #%d", item.Type, item.ID)))
+	s.WriteString(.HeaderStyle.Render(fmt.Sprintf("EDITING: %s #%d", item.Type, item.ID)))
 	s.WriteString("\n\n")
 
 	// Title - wrap to width
 	wrappedTitle := wrapText(item.Title, width-2)
-	s.WriteString(types.TitleDetailStyle.Render(wrappedTitle))
+	s.WriteString(azure.TitleDetailStyle.Render(wrappedTitle))
 	s.WriteString("\n\n")
 
 	// Edit instruction
@@ -220,7 +221,7 @@ func RenderEditView(item *types.BacklogItem, selectedFieldIndex int, width int, 
 	s.WriteString(textareaView)
 	s.WriteString("\n\n")
 
-	s.WriteString(types.HelpStyle.Render("Ctrl+S: save to modified item • Esc: cancel"))
+	s.WriteString(azure.HelpStyle.Render("Ctrl+S: save to modified item • Esc: cancel"))
 
 	return s.String()
 }
