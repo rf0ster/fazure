@@ -76,7 +76,7 @@ func (t *Tabs) Update(form *Form, msg tea.Msg) tea.Cmd {
 }
 
 func (t *Tabs) View(form *Form) string {
-	output := ""
+	output := "\n"
 	for _, label := range t.labels {
 		if t.labels[t.focusedIndex] == label && t.isFocused {
 			output += focusedTabStyle.Render(" " + label + " ")
