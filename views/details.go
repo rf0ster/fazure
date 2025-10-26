@@ -11,7 +11,8 @@ import (
 )
 
 type DetailsView struct {
-	item *azure.WorkItem
+	item             *azure.WorkItem
+	commentsViewport viewport.Model
 }
 
 func (v *DetailsView) Init(m Model) tea.Cmd {
@@ -66,24 +67,39 @@ func (v *DetailsView) View(m Model) string {
 	// Display comments section
 	discussionHeader := DiscussionHeaderStyle.Render(fmt.Sprintf("Discussion (%d)", len(item.Comments)))
 	s.WriteString(discussionHeader + "\n")
-	viewportView := CreateCommentsViewport(item, width).View()
-	s.WriteString(viewportView)
+
+	// Initialize viewport if not already initialized
+	if v.commentsViewport.Width == 0 {
+		v.commentsViewport = viewport.New(width, 20)
+	}
+
+	// Update viewport content and dimensions
+	v.commentsViewport.Width = width
+	v.commentsViewport.SetContent(RenderComments(item, width))
+
+	s.WriteString(v.commentsViewport.View())
 	s.WriteString("\n\n")
 
 	return s.String()
 }
 
 func (v *DetailsView) Update(m Model, msg tea.Msg) (tea.Model, tea.Cmd) {
+	var cmd tea.Cmd
+
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "esc":
 			m.view = &BacklogView{}
 			return m, m.view.Init(m)
+		case "shift+up", "K":
+			v.commentsViewport.ScrollUp(1)
+		case "shift+down", "J":
+			v.commentsViewport.ScrollDown(1)
 		}
 	}
 
-	return m, nil
+	return m, cmd
 }
 
 // CreateCommentsViewport creates a viewport for scrollable comments
