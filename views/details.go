@@ -16,9 +16,13 @@ type DetailsView struct {
 
 func (v *DetailsView) Init(m Model) tea.Cmd {
 	v.form = forms.NewForm(
-		forms.NewRadioField("State", []string{"New", "Active", "Resolved", "Closed"}, true),
 		forms.NewRadioField("Assigned To", []string{"Unassigned", "John Doe", "Jane Smith", "Alice Johnson", "Bob Brown"}, true),
+		forms.NewRadioField("State", []string{"New", "Active", "Resolved", "Closed"}, true),
 		forms.NewRadioField("Priority", []string{"1", "2", "3", "4", "5"}, true),
+		forms.NewReadonly("Iteration Path", v.item.Iteration),
+		forms.NewReadonly("Area Path", v.item.AreaPath),
+		forms.NewReadonly("Created By", v.item.CreatedBy),
+		forms.NewReadonly("Created Date", v.item.CreatedDate),
 		forms.NewTabs("",
 			[]string{"Description", "Acceptance Criteria", "Discussion"},
 			[]forms.FormField{
@@ -44,10 +48,8 @@ func (v *DetailsView) View(m Model) string {
 	s.WriteString(GetWorkItemTypeStyle(item.Type).Render(header))
 	s.WriteString("\n")
 
-	width := getContentWidth(m.terminalWidth)
-
 	// Displat work item title
-	wrappedTitle := wrapText(v.item.Title, width)
+	wrappedTitle := wrapText(v.item.Title, getContentWidth(m.terminalWidth))
 	s.WriteString(GetWorkItemTypeStyle(item.Type).Render(wrappedTitle))
 	s.WriteString("\n\n")
 

@@ -6,8 +6,8 @@ import (
 	"strconv"
 
 	"github.com/charmbracelet/bubbles/table"
-	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	tea "github.com/charmbracelet/bubbletea"
 )
 
 type BacklogView struct {
