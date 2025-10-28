@@ -33,7 +33,7 @@ func (r *RadioField) Label() string {
 }
 
 func (r *RadioField) Update(form *Form, msg tea.Msg) tea.Cmd {
-	if r.horizontal {
+	if r.horizontal || !r.editing {
 		return r.updateHorizontal(msg)
 	}
 	return r.updateVertical(msg)
@@ -74,46 +74,75 @@ func (r *RadioField) updateVertical(msg tea.Msg) tea.Cmd {
 }
 
 func (r *RadioField) View(form *Form) string {
-	if r.editing {
-		if r.horizontal {
-			return r.viewHorizontal(form)
-		}
-		return r.viewVertical(form)
+	if r.horizontal {
+		return r.viewHorizontal(form)
 	}
-
-	output := form.Pad(r.label + ":")
-	output += r.options[r.selectedIndex]
-	if r.focused {
-		return radioLabelStyle.Render(output)
-	}
-
-	return output
+	return r.viewVertical(form)
 }
 
 func (r *RadioField) viewHorizontal(form *Form) string {
-	output := form.Pad(r.label + ":")
+	label := form.Pad(r.label + ":")
+	option := r.options[r.selectedIndex]
 
-	for i, option := range r.options {
-		if i == r.selectedIndex {
-			output += "(*) " + option + "  "
-		} else {
-			output += "( ) " + option + "  "
-		}
+	if !r.focused && !r.editing {
+		output := label + option
+		return output
 	}
-	return output
+
+	if r.editing {
+		all := ""
+		for i, opt := range r.options {
+			if i == r.selectedIndex {
+				all += " (*) " + opt
+			} else {
+				all += " ( ) " + opt
+			}
+		}
+		return radioLabelStyle.Render(label + all[1:])
+	}
+
+	output := label
+	if r.selectedIndex > 0 {
+		// Append left arrow nerd font icon to output
+		output += "◀ "
+	}
+	output += option
+	if r.selectedIndex < len(r.options)-1 {
+		output += " ▶"
+	} 
+	return radioLabelStyle.Render(output)
 }
 
 func (r *RadioField) viewVertical(form *Form) string {
-	output := form.Pad(r.label + ":")
+	label := form.Pad(r.label + ":")
+	option := r.options[r.selectedIndex]
 
-	for i, option := range r.options {
-		if i == r.selectedIndex {
-			output += "  (*) " + option + "\n"
-		} else {
-			output += "  ( ) " + option + "\n"
-		}
+	if !r.focused && !r.editing {
+		output := label + option
+		return output
 	}
-	return output
+
+	if r.editing {
+		all := "\n"
+		for i, opt := range r.options {
+			if i == r.selectedIndex {
+				all += " (*) " + opt + "\n"
+			} else {
+				all += " ( ) " + opt + "\n"
+			}
+		}
+		return radioLabelStyle.Render(label + all)
+	}
+
+	output := label
+	if r.selectedIndex > 0 {
+		output += "◀ "
+	}
+	output += option
+	if r.selectedIndex < len(r.options)-1 {
+		output += " ▶"
+	} 
+	return radioLabelStyle.Render(output)
 }
 
 func (r *RadioField) Focus() tea.Cmd {

@@ -17,7 +17,7 @@ type DetailsView struct {
 func (v *DetailsView) Init(m Model) tea.Cmd {
 	v.form = forms.NewForm(
 		forms.NewRadioField("Assigned To", []string{"Unassigned", "John Doe", "Jane Smith", "Alice Johnson", "Bob Brown"}, true),
-		forms.NewRadioField("State", []string{"New", "Active", "Resolved", "Closed"}, true),
+		forms.NewRadioField("State", []string{"New", "Active", "Resolved", "Closed"}, false),
 		forms.NewRadioField("Priority", []string{"1", "2", "3", "4", "5"}, true),
 		forms.NewReadonly("Iteration Path", v.item.Iteration),
 		forms.NewReadonly("Area Path", v.item.AreaPath),
