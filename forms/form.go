@@ -24,7 +24,7 @@ type Form struct {
 	title        string
 	fields       []FormField
 	focusedIndex int
-	isEditing    bool
+	IsEditing    bool
 	labelPad     int
 }
 
@@ -46,16 +46,16 @@ func NewForm(fields ...FormField) *Form {
 }
 
 func (f *Form) Update(model tea.Model, msg tea.Msg) (tea.Model, tea.Cmd) {
-	if f.isEditing {
+	if f.IsEditing {
 		switch msg := msg.(type) {
 		case tea.KeyMsg:
 			switch msg.String() {
 			case "esc":
-				f.isEditing = false
+				f.IsEditing = false
 				f.fields[f.focusedIndex].Save()
 				return model, nil
 			case f.fields[f.focusedIndex].Terminator():
-				f.isEditing = false
+				f.IsEditing = false
 				f.fields[f.focusedIndex].Save()
 				return model, nil
 			default:
@@ -72,7 +72,7 @@ func (f *Form) Update(model tea.Model, msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "k", "up":
 			return model, f.focusPrev()
 		case "enter":
-			f.isEditing = true
+			f.IsEditing = true
 			return model, f.fields[f.focusedIndex].Edit()
 		}
 	}

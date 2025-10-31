@@ -58,6 +58,20 @@ func (v *DetailsView) View(m Model) string {
 }
 
 func (v *DetailsView) Update(m Model, msg tea.Msg) (tea.Model, tea.Cmd) {
+	if v.form.IsEditing {
+		_, cmd := v.form.Update(m, msg)
+		return m, cmd
+	}
+
+	switch msg := msg.(type) {
+	case tea.KeyMsg:
+		switch msg.String() {
+		case "esc":
+			m.view = &BacklogView{}
+			return m, m.view.Init(m)
+		}
+	}
+
 	_, cmd := v.form.Update(m, msg)
 	return m, cmd
 }

@@ -17,7 +17,11 @@ type BacklogView struct {
 
 func (v *BacklogView) Init(m Model) tea.Cmd {
 	return func() tea.Msg {
-		return m.azure.SearchWorkItems(m.user)
+		items, _ := m.azure.QueryWorkItems(azure.QueryParams{
+			AssignedTo: m.user,
+			State:      "Active",
+		})
+		return items
 	}
 }
 
@@ -54,7 +58,7 @@ func (v *BacklogView) Update(m Model, msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 	case []azure.WorkItem:
 		v.workItems = msg
-		v.table = createTable(v.workItems)
+		v.table = createTable(v.workItems, m)
 	}
 
 	v.table, cmd = v.table.Update(msg)
@@ -62,14 +66,21 @@ func (v *BacklogView) Update(m Model, msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 // CreateTable creates and configures a table from backlog items
-func createTable(items []azure.WorkItem) table.Model {
+func createTable(items []azure.WorkItem, m Model) table.Model {
+	w := m.terminalWidth - 8 // Adjust for padding/margin
+	h := m.terminalHeight - 10
+
+	calcW := func(perc float64) int {
+		return int(float64(w) * perc)
+	}
+
 	columns := []table.Column{
-		{Title: "ID", Width: 8},
-		{Title: "Type", Width: 12},
-		{Title: "Title", Width: 45},
-		{Title: "Assigned To", Width: 15},
-		{Title: "State", Width: 12},
-		{Title: "Priority", Width: 8},
+		{Title: "ID", Width: calcW(0.08)},
+		{Title: "Type", Width: calcW(0.12)},
+		{Title: "Title", Width: calcW(0.45)},
+		{Title: "Assigned To", Width: calcW(0.15)},
+		{Title: "State", Width: calcW(0.12)},
+		{Title: "Priority", Width: calcW(0.08)},
 	}
 
 	rows := []table.Row{}
@@ -88,7 +99,7 @@ func createTable(items []azure.WorkItem) table.Model {
 		table.WithColumns(columns),
 		table.WithRows(rows),
 		table.WithFocused(true),
-		table.WithHeight(15),
+		table.WithHeight(h),
 	)
 
 	s := table.DefaultStyles()

@@ -2,6 +2,7 @@ package views
 
 import (
 	"fazure/azure"
+	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -9,16 +10,19 @@ import (
 type Model struct {
 	view           View
 	user           string
-	azure          azure.MockAzureClient
+	azure          *azure.AzureClient
 	terminalWidth  int
 	terminalHeight int
 }
 
 func NewModel() Model {
 	return Model{
-		user:  "john",
+		user:  os.Getenv("AZURE_USER"),
 		view:  &BacklogView{},
-		azure: azure.MockAzureClient{},
+		azure: azure.NewClient(
+			os.Getenv("AZURE_ORG"), 
+			os.Getenv("AZURE_PROJECT"), 
+			os.Getenv("AZURE_PAT")),
 	}
 }
 
@@ -34,7 +38,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, nil
 	case tea.KeyMsg:
 		switch msg.String() {
-		case "ctrl+c", "q":
+		case "ctrl+c":
 			return m, tea.Quit
 		default:
 			return m.view.Update(m, msg)
